@@ -7,11 +7,14 @@
 after_initialize do
 
    def metar(location, user)
-    require 'net/http'
-    require "json"
+        require 'net/http'
+        require "json"
 
-        if !location.nil?
-            resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{location.upcase}"))
+        match = location.match((/\[ *METAR (\w*) *\]/i)
+        loc = match[1] if match.present? 
+
+        if loc.present?
+            resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{loc.upcase}"))
             j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
@@ -24,6 +27,8 @@ after_initialize do
             else
                 return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
             end
+        else
+            return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
         end
     end
 
@@ -31,20 +36,25 @@ after_initialize do
         require 'net/http'
         require "json"
 
-        if !location.nil?
-            resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{location.upcase}"))
+        match = location.match((/\[ *METAR (\w*) *\]/i)
+        loc = match[1] if match.present? 
+
+        if loc.present?
+            resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{loc.upcase}"))
             j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
-                    return "@#{user.username} TAF is confused. Error was: #{j_resp["Error"]}."
+                    return "@#{user.username} METAR is confused. Error was: #{j_resp["Error"]}."
                 else
                     if j_resp["Raw-Report"]
-                        return "@#{user.username} TAF raw report: #{j_resp["Raw-Report"]}."
+                        return "@#{user.username} METAR raw report: #{j_resp["Raw-Report"]}."
                     end
                 end    
             else
-                return "@#{user.username} TAF is lost. Example to use: [TAF CYVR]."
+                return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
             end
+        else
+            return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
         end
     end
 

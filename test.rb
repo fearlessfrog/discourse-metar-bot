@@ -4,8 +4,12 @@ def metar(location, user)
     require 'net/http'
     require "json"
 
-    if !location.nil?
-        resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{location.upcase}"))
+    match = location.match(/\[ *METAR (\w*) *\]/i)
+    loc = match[1] if !match.nil? 
+
+    if !loc.nil?
+        resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{loc.upcase}"))
+        
         j_resp = JSON.parse(resp)
         if !j_resp.nil?
             if !j_resp["Error"].nil?
@@ -42,6 +46,13 @@ def taf(location, user)
     end
 end
 
-puts metar("CYVR", "fearlessfrog")
+def inline_metar(post)
+    #post.raw.gsub!(/\[ *METAR \w* *\]/i) { |loc| metar(loc, "testuser") }
+    post.gsub!(/\[ *METAR \w* *\]/i) { |loc| metar(loc, "testuser") }
+end
 
-puts taf("KJFK", "fearlessfrog")
+#puts metar("CYVR", "fearlessfrog")
+
+#puts taf("KJFK", "fearlessfrog")
+
+puts inline_metar("Hello [METAR CYVR] dude.")
