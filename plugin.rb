@@ -6,37 +6,6 @@
 
 after_initialize do
 
-    def roll_dice(type, user)
-        num, size = type.match(/([1-9]*)d([0-9]+)/i).captures
-
-        result = ''
-        sum = 0
-
-        if num.nil? or num.empty?
-            num = 1
-        else
-            num = num.to_i
-        end
-
-        (1..num).each do |n|
-            roll = rand(1..size.to_i)
-            result += "+ #{roll} "
-            sum += roll
-        end
-
-        if num == 1
-            "@#{user.username} rolled `d#{size}:" + result[1..-1] + "`"
-        elsif SiteSetting.dice_roller_sum_rolls
-            if num > 9
-              "Nope. Buy @wheelsup_cavu a beer though for finding the over 9 dice bug."
-            else
-              "@#{user.username} rolled `#{num}d#{size}:" + result[1..-1] + "= #{sum}`"
-            end
-        else
-            "@#{user.username} rolled `#{num}d#{size}:" + result[1..-1] + "`"
-        end
-    end
-
    def metar(location, user)
     require 'net/http'
     require "json"
@@ -82,19 +51,19 @@ after_initialize do
     def inline_metar(post)
         post.raw.gsub!(/\[ *METAR \w* *\]/i) { |loc| metar(loc, post.user) }
         
-        # Hardcoded to dicebot user, nice..
-        #post.set_owner(User.find(470), post.user)
+        # Hardcoded to metarbot user, nice..
+        post.set_owner(User.find(494), post.user)
         
-        post.set_owner(User.find(-1), post.user)
+        #post.set_owner(User.find(-1), post.user)
     end
 
     def inline_taf(post)
         post.raw.gsub!(/\[ *METAR \w* *\]/i) { |loc| taf(loc, post.user) }
         
-        # Hardcoded to dicebot user, nice..
-        #post.set_owner(User.find(470), post.user)
+        # Hardcoded to metarbot user, nice..
+        post.set_owner(User.find(494), post.user)
         
-        post.set_owner(User.find(-1), post.user)
+        #post.set_owner(User.find(-1), post.user)
     end
 
     on(:post_created) do |post, params|
