@@ -29,8 +29,11 @@ def taf(location, user)
     require 'net/http'
     require "json"
 
-    if !location.nil?
-        resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{location.upcase}"))
+    match = location.match(/\[ *TAF (\w*) *\]/i)
+    loc = match[1] if !match.nil? 
+
+    if !loc.nil?
+        resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{loc.upcase}"))
         j_resp = JSON.parse(resp)
         if !j_resp.nil?
             if !j_resp["Error"].nil?
@@ -51,8 +54,15 @@ def inline_metar(post)
     post.gsub!(/\[ *METAR \w* *\]/i) { |loc| metar(loc, "testuser") }
 end
 
+def inline_taf(post)
+    #post.raw.gsub!(/\[ *METAR \w* *\]/i) { |loc| metar(loc, "testuser") }
+    post.gsub!(/\[ *TAF \w* *\]/i) { |loc| taf(loc, "testuser") }
+end
+
 #puts metar("CYVR", "fearlessfrog")
 
 #puts taf("KJFK", "fearlessfrog")
 
 puts inline_metar("Hello [METAR CYVR] dude.")
+
+puts inline_taf("Hello [TAF CYVR] dude.")
