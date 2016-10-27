@@ -36,7 +36,7 @@ after_initialize do
         require 'net/http'
         require "json"
 
-        match = location.match(/\[ *METAR (\w*) *\]/i)
+        match = location.match(/\[ *TAF (\w*) *\]/i)
         loc = match[1] if match.present? 
 
         if loc.present?
