@@ -77,13 +77,7 @@ after_initialize do
     end
 
     on(:post_created) do |post, params|
-        #if SiteSetting.dice_roller_enabled and post.raw =~ /\[ ?roll *([1-9]*d[0-9]+) *\]/i
-        #    if SiteSetting.dice_roller_inline_rolls
-        #        inline_roll(post)
-        #    else
-        #        append_roll(post)
-        #    end
-
+    
         if SiteSetting.metar_bot_enabled
             if post.raw =~ /\[ *METAR \w* *\]/i
                 inline_metar(post)
