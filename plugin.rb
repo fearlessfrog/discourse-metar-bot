@@ -10,7 +10,7 @@ after_initialize do
         require 'net/http'
         require "json"
 
-        match = location.match((/\[ *METAR (\w*) *\]/i)
+        match = location.match(/\[ *METAR (\w*) *\]/i)
         loc = match[1] if match.present? 
 
         if loc.present?
@@ -36,7 +36,7 @@ after_initialize do
         require 'net/http'
         require "json"
 
-        match = location.match((/\[ *METAR (\w*) *\]/i)
+        match = location.match(/\[ *METAR (\w*) *\]/i)
         loc = match[1] if match.present? 
 
         if loc.present?
@@ -44,17 +44,17 @@ after_initialize do
             j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
-                    return "@#{user.username} METAR is confused. Error was: #{j_resp["Error"]}."
+                    return "@#{user.username} TAF is confused. Error was: #{j_resp["Error"]}."
                 else
                     if j_resp["Raw-Report"]
-                        return "@#{user.username} METAR raw report: #{j_resp["Raw-Report"]}."
+                        return "@#{user.username} TAF raw report: #{j_resp["Raw-Report"]}."
                     end
                 end    
             else
-                return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
+                return "@#{user.username} TAF is lost. Example to use: [TAF CYVR]."
             end
         else
-            return "@#{user.username} METAR is lost. Example to use: [METAR CYVR]."
+            return "@#{user.username} TAF is lost. Example to use: [TAF CYVR]."
         end
     end
 
