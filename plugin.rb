@@ -68,7 +68,7 @@ after_initialize do
     end
 
     def inline_taf(post)
-        post.raw.gsub!(/\[ *METAR \w* *\]/i) { |loc| taf(loc, post.user) }
+        post.raw.gsub!(/\[ *TAF \w* *\]/i) { |loc| taf(loc, post.user) }
         
         # Hardcoded to metarbot user, nice..
         post.set_owner(User.find(494), post.user)
