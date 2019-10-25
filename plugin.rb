@@ -16,7 +16,7 @@ after_initialize do
 
         if loc.present?
            
-            uri = URI.parse("https://avwx.rest/api/metar/#{loc.upcase}")
+            uri = URI.parse("http://avwx.rest/api/metar/#{loc.upcase}")
             http = Net::HTTP.new(uri.host, uri.port)
 
             request = Net::HTTP::Get.new(uri.request_uri)
@@ -28,12 +28,12 @@ after_initialize do
             # Depreciated non key way
             #resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{loc.upcase}"))
             
-           j_resp = JSON.parse(resp)
+           j_resp = JSON.parse(resp.body)
             if !j_resp.nil?
-                if !j_resp["Error"].nil?
+                if !j_resp["error"].nil?
                     return "@#{user.username} METAR is confused. Error was: #{j_resp["error"]}."
                 else
-                    if j_resp["Raw-Report"]
+                    if j_resp["sanitized"]
                         return "@#{user.username} METAR raw report: #{j_resp["sanitized"]}."
                     end
                 end    
@@ -55,7 +55,7 @@ after_initialize do
 
         if loc.present?
            
-            uri = URI.parse("https://avwx.rest/api/taf/#{loc.upcase}")
+            uri = URI.parse("http://avwx.rest/api/taf/#{loc.upcase}")
             http = Net::HTTP.new(uri.host, uri.port)
 
             request = Net::HTTP::Get.new(uri.request_uri)
@@ -67,13 +67,13 @@ after_initialize do
             # Depreciated non key way
             #resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{loc.upcase}"))
             
-           j_resp = JSON.parse(resp)
+           j_resp = JSON.parse(resp.body)
             if !j_resp.nil?
-                if !j_resp["Error"].nil?
+                if !j_resp["error"].nil?
                     return "@#{user.username} TAF is confused. Error was: #{j_resp["error"]}."
                 else
-                    if j_resp["Raw-Report"]
-                        return "@#{user.username} TAF raw report: #{j_resp["sanitized"]}."
+                    if j_resp["raw"]
+                        return "@#{user.username} TAF raw report: #{j_resp["raw"]}."
                     end
                 end    
             else
