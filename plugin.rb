@@ -8,14 +8,27 @@ after_initialize do
 
    def metar(location, user)
         require 'net/http'
+        require 'uri'
         require "json"
 
         match = location.match(/\[ *METAR (\w*) *\]/i)
         loc = match[1] if match.present? 
 
         if loc.present?
-            resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{loc.upcase}"))
-            j_resp = JSON.parse(resp)
+           
+            uri = URI.parse("https://avwx.rest/api/metar/#{loc.upcase}")
+            http = Net::HTTP.new(uri.host, uri.port)
+
+            request = Net::HTTP::Get.new(uri.request_uri)
+           
+            # Nothing could go wrong with not using an ENV here
+            request["Authorization"] = "kFJmy96tjIXEqEPVa8FmQMThBRmkfu3tCDygfVDBEDI"          
+            resp = http.request(request)
+           
+            # Depreciated non key way
+            #resp = Net::HTTP.get(URI("http://avwx.rest/api/metar/#{loc.upcase}"))
+            
+           j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
                     return "@#{user.username} METAR is confused. Error was: #{j_resp["Error"]}."
@@ -34,14 +47,27 @@ after_initialize do
 
     def taf(location, user)
         require 'net/http'
+        require 'uri'
         require "json"
-
+       
         match = location.match(/\[ *TAF (\w*) *\]/i)
         loc = match[1] if match.present? 
 
         if loc.present?
-            resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{loc.upcase}"))
-            j_resp = JSON.parse(resp)
+           
+            uri = URI.parse("https://avwx.rest/api/taf/#{loc.upcase}")
+            http = Net::HTTP.new(uri.host, uri.port)
+
+            request = Net::HTTP::Get.new(uri.request_uri)
+           
+            # Nothing could go wrong with not using an ENV here
+            request["Authorization"] = "kFJmy96tjIXEqEPVa8FmQMThBRmkfu3tCDygfVDBEDI"          
+            resp = http.request(request)
+           
+            # Depreciated non key way
+            #resp = Net::HTTP.get(URI("http://avwx.rest/api/taf/#{loc.upcase}"))
+            
+           j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
                     return "@#{user.username} TAF is confused. Error was: #{j_resp["Error"]}."
