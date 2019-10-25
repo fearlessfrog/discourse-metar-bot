@@ -31,7 +31,7 @@ after_initialize do
            j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
-                    return "@#{user.username} METAR is confused. Error was: #{j_resp["Error"]}."
+                    return "@#{user.username} METAR is confused. Error was: #{j_resp["error"]}."
                 else
                     if j_resp["Raw-Report"]
                         return "@#{user.username} METAR raw report: #{j_resp["sanitized"]}."
@@ -70,7 +70,7 @@ after_initialize do
            j_resp = JSON.parse(resp)
             if !j_resp.nil?
                 if !j_resp["Error"].nil?
-                    return "@#{user.username} TAF is confused. Error was: #{j_resp["Error"]}."
+                    return "@#{user.username} TAF is confused. Error was: #{j_resp["error"]}."
                 else
                     if j_resp["Raw-Report"]
                         return "@#{user.username} TAF raw report: #{j_resp["sanitized"]}."
