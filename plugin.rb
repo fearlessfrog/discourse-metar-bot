@@ -1,6 +1,6 @@
 # name: discourse-metar-bot
 # about: returns the weather from avwx.rest METAR data
-# version: 1
+# version: 2
 # authors: fearlessfrog
 # url: https://github.com/fearlessfrog/discourse-metar-bot
 
@@ -34,7 +34,7 @@ after_initialize do
                     return "@#{user.username} METAR is confused. Error was: #{j_resp["Error"]}."
                 else
                     if j_resp["Raw-Report"]
-                        return "@#{user.username} METAR raw report: #{j_resp["Raw-Report"]}."
+                        return "@#{user.username} METAR raw report: #{j_resp["sanitized"]}."
                     end
                 end    
             else
@@ -73,7 +73,7 @@ after_initialize do
                     return "@#{user.username} TAF is confused. Error was: #{j_resp["Error"]}."
                 else
                     if j_resp["Raw-Report"]
-                        return "@#{user.username} TAF raw report: #{j_resp["Raw-Report"]}."
+                        return "@#{user.username} TAF raw report: #{j_resp["sanitized"]}."
                     end
                 end    
             else
